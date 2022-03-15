@@ -13,4 +13,13 @@ function writeWarehouses(data) {
   fs.writeFileSync("./data/warehouses.json", stringifiedData);
 }
 
+router.get('/:id', (req, res) => {
+  const warehouses = readWarehouses();
+  const individualWarehouse = warehouses.find((warehouse) => warehouse.id === req.params.id);
+  if (!individualWarehouse) {
+    return res.status(404).send('Warehouse not found');
+  }
+  res.json(individualWarehouse);
+});
+
 module.exports = router;
