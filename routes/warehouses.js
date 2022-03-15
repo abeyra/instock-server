@@ -13,6 +13,19 @@ function writeWarehouses(data) {
   fs.writeFileSync("./data/warehouses.json", stringifiedData);
 }
 
+router.get('/', (req, res) => {
+  const warehouses = readWarehouses();
+  const warehousesArray = warehouses.map(warehouse => {
+    return {
+      id: warehouse.id,
+      name: warehouse.name,
+      address: warehouse.address,
+      country: warehouse.country
+    }
+  })
+  res.status(200).json(warehousesArray);
+});
+
 router.get('/:id', (req, res) => {
   const warehouses = readWarehouses();
   const individualWarehouse = warehouses.find((warehouse) => warehouse.id === req.params.id);
