@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
+const { v4: uuidv4 } = require("uuid"); //for when we are creating new data
 
 function readWarehouses() {
   const warehousesData = fs.readFileSync("./data/warehouses.json");
@@ -13,17 +14,26 @@ function writeWarehouses(data) {
   fs.writeFileSync("./data/warehouses.json", stringifiedData);
 }
 
-router.get('/', (req, res) => {
+
+router.get("/", (req, res) => {
   const warehouses = readWarehouses();
-  const warehousesArray = warehouses.map(warehouse => {
-    return {
+
+  const warehouseArr = warehouses.map((warehouse) => {
+    return{
       id: warehouse.id,
       name: warehouse.name,
       address: warehouse.address,
-      country: warehouse.country
+      city: warehouse.city,
+      country: warehouse.country,
+      contact: {
+        name: warehouse.contact.name,
+        position: warehouse.contact.position,
+        phone: warehouse.contact.phone,
+        email: warehouse.contact.email
+      }
     }
   })
-  res.status(200).json(warehousesArray);
+  res.json(warehouseArr);
 });
 
 router.get('/:id', (req, res) => {
@@ -34,5 +44,13 @@ router.get('/:id', (req, res) => {
   }
   res.json(individualWarehouse);
 });
+
+
+//This route returns all warehouse data from the json data file to the user
+
+
+
+
+
 
 module.exports = router;
