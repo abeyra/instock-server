@@ -14,6 +14,7 @@ function writeWarehouses(data) {
   fs.writeFileSync("./data/warehouses.json", stringifiedData);
 }
 
+
 //This route returns all warehouse data from the json data file to the user
 router.get("/", (req, res) => {
   const warehouses = readWarehouses();
@@ -35,6 +36,7 @@ router.get("/", (req, res) => {
   })
   res.json(warehouseArr);
 });
+
 
 
 
