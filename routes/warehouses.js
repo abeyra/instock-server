@@ -51,14 +51,7 @@ router.get('/:id', (req, res) => {
 });
 
 //This route returns list of items in a specific warehouse
-router.get('/:id', (req, res) => {
-  const warehouses = readInventory();
-  const warehouseInventory = warehouses.filter((warehouse) => warehouse.id === req.params.id);
-  if (!warehouseInventory) {
-    return res.status(201).send('Warehouse is out of stock');
-  }
-  res.json(warehouseInventory)
-})
+
 
 //This route returns all warehouse data from the json data file to the user
 
