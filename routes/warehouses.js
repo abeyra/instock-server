@@ -15,7 +15,6 @@ function writeWarehouses(data) {
 }
 
 
-//This route returns all warehouse data from the json data file to the user
 router.get("/", (req, res) => {
   const warehouses = readWarehouses();
 
@@ -36,6 +35,20 @@ router.get("/", (req, res) => {
   })
   res.json(warehouseArr);
 });
+
+router.get('/:id', (req, res) => {
+  const warehouses = readWarehouses();
+  const individualWarehouse = warehouses.find((warehouse) => warehouse.id === req.params.id);
+  if (!individualWarehouse) {
+    return res.status(404).send('Warehouse not found');
+  }
+  res.json(individualWarehouse);
+});
+
+
+//This route returns all warehouse data from the json data file to the user
+
+
 
 
 
