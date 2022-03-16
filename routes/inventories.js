@@ -13,4 +13,17 @@ function writeInventory(data) {
   fs.writeFileSync("./data/inventories.json", stringifiedData);
 }
 
+//This route returns the specific inventory item detail
+router.get("/:id", (req, res) => {
+  const allInventory = readInventory();
+
+  const item = allInventory.find((inventory) => {
+    return inventory.id === req.params.id;
+  });
+
+  if (!item) return res.status(404).send("Item NOT Found!");
+
+  res.json(item);
+});
+
 module.exports = router;
