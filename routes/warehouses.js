@@ -31,7 +31,9 @@ function writeInventory(data) {
   const stringifiedData = JSON.stringify(data);
   fs.writeFileSync("./data/inventories.json", stringifiedData);
 }
-//////////
+/////////
+
+//This route returns all warehouse data from the json data file to the user
 
 router.get("/", (req, res) => {
   const warehouses = readWarehouses();
@@ -63,13 +65,10 @@ router.get('/:id', (req, res) => {
   res.json(individualWarehouse);
 });
 
-//This route returns all warehouse data from the json data file to the user
-
 //This route will delete a warehouse and all it's associated inventory
 router.delete("/delete/:id", (req, res) => {
   const warehouses = readWarehouses();
   const inventories = readInventory();
-
   const warehouseIndex = warehouses.findIndex((warehouse) => {
     return warehouse.id === req.params.id;
   });

@@ -17,7 +17,7 @@ function writeInventory(data) {
 router.get("/", (req, res) => {
   const inventories = readInventory();
 
-  const inventoryArr = inventory.map((inventory) => {
+  const inventoryArr = inventories.map((inventory) => {
     return{
       id: inventory.id,
       itemName: inventory.itemName,
@@ -44,6 +44,15 @@ router.get("/:id", (req, res) => {
   res.json(item);
 });
 
-
+router.get('/warehouses/:id', (req, res) => {
+  const inventory = readInventory();
+  const warehouseID = req.params.id;
+  const warehouseInventory = inventory.filter((item) => item.warehouseID === warehouseID);
+  console.log(warehouseInventory)
+  if (!warehouseInventory) {
+    return res.status(404).send('Warehouse is out of stock');
+  }
+  res.json(warehouseInventory)
+})
 
 module.exports = router;
