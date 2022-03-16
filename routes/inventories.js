@@ -26,4 +26,18 @@ router.get("/:id", (req, res) => {
   res.json(item);
 });
 
+// This route will Put/Patch Edit a single inventory item
+router.put('/:id', (req, res) => {
+  res.send(req.body);
+  const individualItem = inventories.map(item => item.id === req.params.id && item.warehouseName === req.params.warehouseName);
+  const inventories = readInventory();
+  writeInventory(inventories);
+  inventories.slice(individualItem);
+  inventories.push(req.body);
+  res.status(201).send({
+    status: 'item created'
+  });
+  res.json('Inventory item');
+})
+
 module.exports = router;
