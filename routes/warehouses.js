@@ -14,6 +14,11 @@ function writeWarehouses(data) {
   fs.writeFileSync("./data/warehouses.json", stringifiedData);
 }
 
+function readInventory() {
+  const inventoryData = fs.readFileSync("./data/inventories.json");
+  const parsedInventory = JSON.parse(inventoryData);
+  return parsedInventory;
+}
 
 //Functions for use with the Delete of a Warehouse API - Inventory in corresponsing warehouses must also be deleted.
 function readInventory() {
