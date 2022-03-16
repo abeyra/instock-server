@@ -14,6 +14,11 @@ function writeWarehouses(data) {
   fs.writeFileSync("./data/warehouses.json", stringifiedData);
 }
 
+function readInventory() {
+  const inventoryData = fs.readFileSync("./data/inventories.json");
+  const parsedInventory = JSON.parse(inventoryData);
+  return parsedInventory;
+}
 
 router.get("/", (req, res) => {
   const warehouses = readWarehouses();
@@ -45,6 +50,15 @@ router.get('/:id', (req, res) => {
   res.json(individualWarehouse);
 });
 
+//This route returns list of items in a specific warehouse
+router.get('/:id', (req, res) => {
+  const warehouses = readInventory();
+  const warehouseInventory = warehouses.filter((warehouse) => warehouse.id === req.params.id);
+  if (!warehouseInventory) {
+    return res.status(201).send('Warehouse is out of stock');
+  }
+  res.json(warehouseInventory)
+})
 
 //This route returns all warehouse data from the json data file to the user
 
