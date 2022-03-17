@@ -65,6 +65,42 @@ router.post("/", (req, res) => {
     quantity
   } = req.body
 
+  if (!warehouseName) {
+    return res.status(400).json({
+      message: 'warehouseName is required',
+    });
+  }
+
+  if (!itemName) {
+    return res.status(400).json({
+      message: 'itemName is required',
+    });
+  }
+
+  if (!description) {
+    return res.status(400).json({
+      message: 'description is required',
+    });
+  }
+
+  if (!category) {
+    return res.status(400).json({
+      message: 'category is required',
+    });
+  }
+
+  if (!status) {
+    return res.status(400).json({
+      message: 'status is required',
+    });
+  }
+
+  if (!quantity) {
+    return res.status(400).json({
+      message: 'quantity is required',
+    });
+  }
+
   let newItem = {
     id: uuidv4(),
     warehouseID: foundWarehouse.id,
