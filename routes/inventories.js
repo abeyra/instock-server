@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
 
 function readInventory() {
   const inventoryData = fs.readFileSync("./data/inventories.json");
@@ -11,6 +12,12 @@ function readInventory() {
 function writeInventory(data) {
   const stringifiedData = JSON.stringify(data);
   fs.writeFileSync("./data/inventories.json", stringifiedData);
+}
+
+function readWarehouses() {
+  const warehousesData = fs.readFileSync("./data/warehouses.json");
+  const parsedWarehouses = JSON.parse(warehousesData);
+  return parsedWarehouses;
 }
 
 //This route returns the inventory items across all warehouses
@@ -43,6 +50,36 @@ router.get("/:id", (req, res) => {
 
   res.json(item);
 });
+
+//create new inventory item 
+router.post("/", (req, res) => {
+  let inventory = readInventory();
+  let warehouses = readWarehouses();
+  let foundWarehouse = warehouses.find(warehouse => req.body.warehouseName === warehouse.name)
+  let  {
+    warehouseName,
+    itemName,
+    description,
+    category,
+    status,
+    quantity
+  } = req.body
+
+  let newItem = {
+    id: uuidv4(),
+    warehouseID: foundWarehouse.id,
+    warehouseName,
+    itemName,
+    description,
+    category,
+    status,
+    quantity
+  }
+
+  inventory.push(newItem);
+  writeInventory(inventory);
+  res.status(200).json(newItem);
+})
 
 router.get('/warehouses/:id', (req, res) => {
   const inventory = readInventory();
