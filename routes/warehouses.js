@@ -104,4 +104,39 @@ router.delete("/delete/:id", (req, res) => {
   res.status(202).send(`Deleted - Warehouse: ${deletedWarehouse.name} - ${deletedWarehouse.id}, in ${deletedWarehouse.city},  Successfully`);
 });
 
+
+router.put("/edit/:id", (req, res) => {
+  let warehouse = warehouses.find((warehouse) => {
+    return warehouse.id === req.params.id;
+  });
+
+  if (warehouse) {
+    const {
+      name,
+      address,
+      city,
+      country,
+      contact
+    } = req.body;
+    warehouse.name = name;
+    warehouse.address = address;
+    warehouse.city = city;
+    warehouse.country = country;
+    warehouse.contact = contact;
+
+    readWarehouses(),
+      writeWarehouses(warehouses),
+      (err) => {
+        if (err) res.status(500).send(err);
+
+        console.log("Warehouse edited");
+        res.status(201).send(warehouse);
+      }
+    
+  } else res.status(404).send("Warehouse not found");
+});
+
+
+    
+
 module.exports = router;

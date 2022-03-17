@@ -56,6 +56,7 @@ router.put('/:id', (req, res) => {
     status: 'item created'
   });
   res.json('Inventory item');
+});
 router.get('/warehouses/:id', (req, res) => {
   const inventory = readInventory();
   const warehouseID = req.params.id;
@@ -67,4 +68,4 @@ router.get('/warehouses/:id', (req, res) => {
   res.json(warehouseInventory)
 })
 
-module.exports = router;
+module.exports = router
