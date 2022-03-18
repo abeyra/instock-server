@@ -104,6 +104,32 @@ router.delete("/delete/:id", (req, res) => {
   res.status(202).send(`Deleted - Warehouse: ${deletedWarehouse.name} - ${deletedWarehouse.id}, in ${deletedWarehouse.city},  Successfully`);
 });
 
+router
+    .post("/add/:id", (req,res) => {
+        const warehouseData = readWarehouses()
+        const newWarehouse = {
+            id:uuidv4(),        
+            name: req.body.warehouseName,
+            address: req.body.address,
+            city: req.body.city,
+            country: req.body.country,
+            contact: {
+              name: req.body.contact.name,
+              position: req.body.contact.position,
+              phone: req.body.contact.phone,
+              email: req.body.contact.email
+              }
+        }
+
+        if (!newWarehouse) {
+          res.status(400).send("Fill all fields")
+        } else {
+          warehouseData.push(newWarehouse); 
+          writeWarehouses(warehouseData);
+          res.status(201).json(newWarehouse).send("Warehouse Added Successfully");
+        }
+             
+          })
 
 router.put("/edit/:id", (req, res) => {
   const warehouseData = readWarehouses();
