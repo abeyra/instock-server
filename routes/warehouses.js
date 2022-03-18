@@ -14,6 +14,14 @@ function writeWarehouses(data) {
   fs.writeFileSync("./data/warehouses.json", stringifiedData);
 }
 
+router.get('/:id', (req, res) => {
+  const warehouses = readWarehouses();
+  const individualWarehouse = warehouses.find((warehouse) => warehouse.id === req.params.id);
+  if (!individualWarehouse) {
+    return res.status(404).send('Warehouse not found');
+  }
+  res.json(individualWarehouse);
+});
 function readInventory() {
   const inventoryData = fs.readFileSync("./data/inventories.json");
   const parsedInventory = JSON.parse(inventoryData);
@@ -32,32 +40,6 @@ function writeInventory(data) {
   fs.writeFileSync("./data/inventories.json", stringifiedData);
 }
 /////////
-
-/// Functions to validate email and phone number
-
-function validatePhone(phonenumber)
-{
-  var phoneno = /^\d{10}$/;
-  if((phonenumber.value.match(phoneno)))
-        {
-      return true;
-        }
-      else
-        {
-        alert("You have entered an invalid Phone Number");
-        return false;
-        }
-}
-
-function ValidateEmail(mail) 
-{
- if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(myForm.emailAddr.value))
-  {
-    return (true)
-  }
-    alert("You have entered an invalid email address!")
-    return (false)
-}
 
 //This route returns all warehouse data from the json data file to the user
 
@@ -81,6 +63,8 @@ router.get("/", (req, res) => {
   })
   res.json(warehouseArr);
 });
+
+
 
 router.get('/:id', (req, res) => {
   const warehouses = readWarehouses();
@@ -132,8 +116,8 @@ router
             contact: {
               name: req.body.contact.name,
               position: req.body.contact.position,
-              phone: validatePhone(req.body.contact.phone),
-              email: ValidateEmail(req.body.contact.email)
+              phone: req.body.contact.phone,
+              email: req.body.contact.email
               }
         }
 
@@ -146,6 +130,24 @@ router
         }
              
           })
-        
+
+router.put("/edit/:id", (req, res) => {
+  const warehouseData = readWarehouses();
+  let warehouse = warehouseData.find((warehouse) => {
+    return warehouse.id === req.params.id;
+  });
+  if (!warehouse) {
+    res.status(404).send("Warehouse not found");
+  }
+    warehouse.name = req.body.name || warehouse.name;
+    warehouse.address = req.body.address || warehouse.address;
+    warehouse.city = req.body.city || warehouse.city;
+    warehouse.country = req.body.country || warehouse.country;
+    warehouse.contact = req.body.contact || warehouse.contact;
+
+    writeWarehouses(warehouseData)
+      console.log("Warehouse edited");
+      res.status(201).json(warehouse);
+});
 
 module.exports = router;
