@@ -44,19 +44,29 @@ router.get("/:id", (req, res) => {
   res.json(item);
 });
 
-// This route will Put/Patch Edit a single inventory item
-router.put('/:id', (req, res) => {
-  res.send(req.body);
-  const individualItem = inventories.map(item => item.id === req.params.id && item.warehouseName === req.params.warehouseName);
-  const inventories = readInventory();
-  writeInventory(inventories);
-  inventories.slice(individualItem);
-  inventories.push(req.body);
-  res.status(201).send({
-    status: 'item created'
-  });
-  res.json('Inventory item');
-});
+//This route will Put / Patch Edit a single inventory item
+router.put('/edit/:id', (req, res) => {
+  const inventoryData = readInventory();
+  let selectedInventory = inventoryData.find((inventory) => {
+    return inventory.id === req.params.id ;
+})
+if (!selectedInventory) {
+  res.status(404).send('Inventory not found');
+}
+  selectedInventory.warehouseName = req.body.warehouseName || selectedInventory.warehouseName;
+  selectedInventory.itemName = req.body.itemName || selectedInventory.itemName;
+  selectedInventory.description = req.body.description || selectedInventory.description;
+  selectedInventory.category = req.body.category || selectedInventory.category;
+  selectedInventory.status = req.body.status || selectedInventory.status;
+  selectedInventory.quantity = req.body.quantity || selectedInventory.quantity;
+
+  writeInventory(inventoryData)
+  console.log('Inventory edited');
+  res.status(201).json(selectedInventory);
+})
+
+
+
 router.get('/warehouses/:id', (req, res) => {
   const inventory = readInventory();
   const warehouseID = req.params.id;

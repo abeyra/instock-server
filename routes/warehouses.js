@@ -106,37 +106,22 @@ router.delete("/delete/:id", (req, res) => {
 
 
 router.put("/edit/:id", (req, res) => {
-  let warehouse = warehouses.find((warehouse) => {
+  const warehouseData = readWarehouses();
+  let warehouse = warehouseData.find((warehouse) => {
     return warehouse.id === req.params.id;
   });
+  if (!warehouse) {
+    res.status(404).send("Warehouse not found");
+  }
+    warehouse.name = req.body.name || warehouse.name;
+    warehouse.address = req.body.address || warehouse.address;
+    warehouse.city = req.body.city || warehouse.city;
+    warehouse.country = req.body.country || warehouse.country;
+    warehouse.contact = req.body.contact || warehouse.contact;
 
-  if (warehouse) {
-    const {
-      name,
-      address,
-      city,
-      country,
-      contact
-    } = req.body;
-    warehouse.name = name;
-    warehouse.address = address;
-    warehouse.city = city;
-    warehouse.country = country;
-    warehouse.contact = contact;
-
-    readWarehouses(),
-      writeWarehouses(warehouses),
-      (err) => {
-        if (err) res.status(500).send(err);
-
-        console.log("Warehouse edited");
-        res.status(201).send(warehouse);
-      }
-    
-  } else res.status(404).send("Warehouse not found");
+    writeWarehouses(warehouseData)
+      console.log("Warehouse edited");
+      res.status(201).json(warehouse);
 });
-
-
-    
 
 module.exports = router;
