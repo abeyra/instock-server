@@ -117,6 +117,27 @@ router.post("/", (req, res) => {
   res.status(200).json(newItem);
 })
 
+//This route will Put / Patch Edit a single inventory item
+router.put('/edit/:id', (req, res) => {
+  const inventoryData = readInventory();
+  let selectedInventory = inventoryData.find((inventory) => {
+    return inventory.id === req.params.id ;
+})
+if (!selectedInventory) {
+  res.status(404).send('Inventory not found');
+}
+  selectedInventory.warehouseName = req.body.warehouseName || selectedInventory.warehouseName;
+  selectedInventory.itemName = req.body.itemName || selectedInventory.itemName;
+  selectedInventory.description = req.body.description || selectedInventory.description;
+  selectedInventory.category = req.body.category || selectedInventory.category;
+  selectedInventory.status = req.body.status || selectedInventory.status;
+  selectedInventory.quantity = req.body.quantity || selectedInventory.quantity;
+
+  writeInventory(inventoryData)
+  console.log('Inventory edited');
+  res.status(201).json(selectedInventory);
+})
+
 router.get('/warehouses/:id', (req, res) => {
   const inventory = readInventory();
   const warehouseID = req.params.id;
@@ -128,4 +149,4 @@ router.get('/warehouses/:id', (req, res) => {
   res.json(warehouseInventory)
 })
 
-module.exports = router;
+module.exports = router

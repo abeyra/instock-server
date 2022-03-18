@@ -1,0 +1,10 @@
+PUT http://localhost:9000/inventories/edit/2922c286-16cd-4d43-ab98-c79f698aeab0 HTTP/1.1 Content-Type: application/json
+
+{
+    "warehouseName": "Manhattan",
+    "itemName": "washer",
+    "description": "This 50\", 4K LED TV provides a crystal-clear picture and vivid colors.",
+    "category": "Electronics",
+    "status": "In Stock",
+    "quantity": 500
+}

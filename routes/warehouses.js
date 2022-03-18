@@ -14,6 +14,14 @@ function writeWarehouses(data) {
   fs.writeFileSync("./data/warehouses.json", stringifiedData);
 }
 
+router.get('/:id', (req, res) => {
+  const warehouses = readWarehouses();
+  const individualWarehouse = warehouses.find((warehouse) => warehouse.id === req.params.id);
+  if (!individualWarehouse) {
+    return res.status(404).send('Warehouse not found');
+  }
+  res.json(individualWarehouse);
+});
 function readInventory() {
   const inventoryData = fs.readFileSync("./data/inventories.json");
   const parsedInventory = JSON.parse(inventoryData);
@@ -56,6 +64,8 @@ router.get("/", (req, res) => {
   res.json(warehouseArr);
 });
 
+
+
 router.get('/:id', (req, res) => {
   const warehouses = readWarehouses();
   const individualWarehouse = warehouses.find((warehouse) => warehouse.id === req.params.id);
@@ -92,6 +102,26 @@ router.delete("/delete/:id", (req, res) => {
   } 
   
   res.status(202).send(`Deleted - Warehouse: ${deletedWarehouse.name} - ${deletedWarehouse.id}, in ${deletedWarehouse.city},  Successfully`);
+});
+
+
+router.put("/edit/:id", (req, res) => {
+  const warehouseData = readWarehouses();
+  let warehouse = warehouseData.find((warehouse) => {
+    return warehouse.id === req.params.id;
+  });
+  if (!warehouse) {
+    res.status(404).send("Warehouse not found");
+  }
+    warehouse.name = req.body.name || warehouse.name;
+    warehouse.address = req.body.address || warehouse.address;
+    warehouse.city = req.body.city || warehouse.city;
+    warehouse.country = req.body.country || warehouse.country;
+    warehouse.contact = req.body.contact || warehouse.contact;
+
+    writeWarehouses(warehouseData)
+      console.log("Warehouse edited");
+      res.status(201).json(warehouse);
 });
 
 module.exports = router;
