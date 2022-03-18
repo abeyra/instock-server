@@ -41,33 +41,6 @@ function writeInventory(data) {
 }
 /////////
 
-/// Functions to validate email and phone number
-
-// function validatePhone(phonenumber)
-// {
-//   var phoneno = /^\d{10}$/;
-//   if((phonenumber.value.match(phoneno)))
-//         {
-//       return true;
-//         }
-//       else
-//         {
-//         alert("You have entered an invalid Phone Number");
-//         return false;
-//         }
-// }
-
-// function ValidateEmail(mail) 
-// {
-//  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(myForm.emailAddr.value))
-//   {
-//     return (true)
-//   }
-//     alert("You have entered an invalid email address!")
-//     return (false)
-// }
-
-//This route returns all warehouse data from the json data file to the user
 
 router.get("/", (req, res) => {
   const warehouses = readWarehouses();
