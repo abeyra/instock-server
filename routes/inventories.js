@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
 
 function readInventory() {
   const inventoryData = fs.readFileSync("./data/inventories.json");
@@ -11,6 +12,12 @@ function readInventory() {
 function writeInventory(data) {
   const stringifiedData = JSON.stringify(data);
   fs.writeFileSync("./data/inventories.json", stringifiedData);
+}
+
+function readWarehouses() {
+  const warehousesData = fs.readFileSync("./data/warehouses.json");
+  const parsedWarehouses = JSON.parse(warehousesData);
+  return parsedWarehouses;
 }
 
 //This route returns the inventory items across all warehouses
@@ -44,6 +51,72 @@ router.get("/:id", (req, res) => {
   res.json(item);
 });
 
+//create new inventory item 
+router.post("/", (req, res) => {
+  let inventory = readInventory();
+  let warehouses = readWarehouses();
+  let foundWarehouse = warehouses.find(warehouse => req.body.warehouseName === warehouse.name)
+  let  {
+    warehouseName,
+    itemName,
+    description,
+    category,
+    status,
+    quantity
+  } = req.body
+
+  if (!warehouseName) {
+    return res.status(400).json({
+      message: 'warehouseName is required',
+    });
+  }
+
+  if (!itemName) {
+    return res.status(400).json({
+      message: 'itemName is required',
+    });
+  }
+
+  if (!description) {
+    return res.status(400).json({
+      message: 'description is required',
+    });
+  }
+
+  if (!category) {
+    return res.status(400).json({
+      message: 'category is required',
+    });
+  }
+
+  if (!status) {
+    return res.status(400).json({
+      message: 'status is required',
+    });
+  }
+
+  if (!quantity) {
+    return res.status(400).json({
+      message: 'quantity is required',
+    });
+  }
+
+  let newItem = {
+    id: uuidv4(),
+    warehouseID: foundWarehouse.id,
+    warehouseName,
+    itemName,
+    description,
+    category,
+    status,
+    quantity
+  }
+
+  inventory.push(newItem);
+  writeInventory(inventory);
+  res.status(200).json(newItem);
+})
+
 //This route will Put / Patch Edit a single inventory item
 router.put('/edit/:id', (req, res) => {
   const inventoryData = readInventory();
@@ -64,8 +137,6 @@ if (!selectedInventory) {
   console.log('Inventory edited');
   res.status(201).json(selectedInventory);
 })
-
-
 
 router.get('/warehouses/:id', (req, res) => {
   const inventory = readInventory();
