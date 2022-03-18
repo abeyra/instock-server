@@ -41,6 +41,32 @@ function writeInventory(data) {
 }
 /////////
 
+/// Functions to validate email and phone number
+
+// function validatePhone(phonenumber)
+// {
+//   var phoneno = /^\d{10}$/;
+//   if((phonenumber.value.match(phoneno)))
+//         {
+//       return true;
+//         }
+//       else
+//         {
+//         alert("You have entered an invalid Phone Number");
+//         return false;
+//         }
+// }
+
+// function ValidateEmail(mail) 
+// {
+//  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(myForm.emailAddr.value))
+//   {
+//     return (true)
+//   }
+//     alert("You have entered an invalid email address!")
+//     return (false)
+// }
+
 //This route returns all warehouse data from the json data file to the user
 
 router.get("/", (req, res) => {
@@ -123,5 +149,32 @@ router.put("/edit/:id", (req, res) => {
       console.log("Warehouse edited");
       res.status(201).json(warehouse);
 });
+router
+    .post("/add/:id", (req,res) => {
+        const warehouseData = readWarehouses()
+        const newWarehouse = {
+            id:uuidv4(),        
+            name: req.body.warehouseName,
+            address: req.body.address,
+            city: req.body.city,
+            country: req.body.country,
+            contact: {
+              name: req.body.contact.name,
+              position: req.body.contact.position,
+              phone: req.body.contact.phone,
+              email: req.body.contact.email
+              }
+        }
+
+        if (!newWarehouse) {
+          res.status(400).send("Fill all fields")
+        } else {
+          warehouseData.push(newWarehouse); 
+          writeWarehouses(warehouseData);
+          res.status(201).json(newWarehouse).send("Warehouse Added Successfully");
+        }
+             
+          })
+        
 
 module.exports = router;
