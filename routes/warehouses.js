@@ -137,8 +137,8 @@ router
               }
         }
 
-        if (newWarehouse === "" ) {
-          alert("Fill all fields")
+        if (!newWarehouse) {
+          res.status(400).send("Fill all fields")
         } else {
           warehouseData.push(newWarehouse); 
           writeWarehouses(warehouseData);
