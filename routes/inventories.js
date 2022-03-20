@@ -149,4 +149,24 @@ router.get('/warehouses/:id', (req, res) => {
   res.json(warehouseInventory)
 })
 
+
+
+router.delete("/delete/:id", (req, res) => {
+  const inventories = readInventory();
+  const inventoryIndex = inventories.findIndex((inventory) => {
+    return inventory.id === req.params.id;
+  });
+  if (inventoryIndex === -1){
+    return res.status(404).send(`Inventory ID: ${req.params.id} NOT Found!`);
+  } 
+  else {
+    inventories.splice(inventoryIndex, 1); 
+  }
+    writeInventory(inventories)
+
+  
+  res.status(202).send("Successfully Deleted.");
+});
+
+
 module.exports = router
