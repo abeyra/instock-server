@@ -1,0 +1,15 @@
+POST http://localhost:9000/warehouses/add/2922c286-16cd-4d43-ab98-c79f698aeab0 HTTP/1.1 
+Content-Type: application/json
+
+{
+    "name": "Tenessee",
+    "address": "123 Tenessee",
+    "city": "Tenessee",
+    "country": "USA",
+    "contact": {
+      "name": "Andres Beyra",
+      "position": "Warehouse Manager",
+      "phone": "+1 (555) 555-1234",
+      "email": "andres@instock.com"
+    }
+}
